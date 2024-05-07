@@ -53,3 +53,21 @@ def update_category(id, new_category):
         return False
     else:
         return True
+
+
+def create_category(new_category):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO Category
+            ( label )
+        VALUES
+            ( ?, ?, ?, ?, ?);
+        """, (new_category['label'], ))
+
+        id = db_cursor.lastrowid
+
+        new_category['id'] = id
+
+    return new_category
