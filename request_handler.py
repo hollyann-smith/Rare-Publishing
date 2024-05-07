@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
 from views.user import create_user, login_user
+from views.post_requests import get_all_posts, create_post, delete_post, update_post
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -61,6 +62,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
         resource, _ = self.parse_url()
+        
+        If
 
         if resource == 'login':
             response = login_user(post_body)
@@ -74,8 +77,18 @@ class HandleRequests(BaseHTTPRequestHandler):
         pass
 
     def do_DELETE(self):
-        """Handle DELETE Requests"""
-        pass
+        # Set a 204 response code
+        self._set_headers(204)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        # Delete a single animal from the list
+        if resource == "posts":
+            delete_post(id)
+
+        # Encode the new animal and send in response
+        self.wfile.write("".encode())
 
 
 def main():
