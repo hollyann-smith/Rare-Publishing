@@ -12,7 +12,7 @@ def get_categories():
     SELECT
       c.id,
       c.label
-    FROM category c
+    FROM Categories c
     """)
 
         categories = []
@@ -34,8 +34,8 @@ def get_single_category(id):
         db_cursor.execute("""
         SELECT
             c.id,
-            c.label,
-        FROM category c
+            c.label
+        FROM Categories c
         WHERE c.id = ?
         """, (id, ))
 
@@ -51,7 +51,7 @@ def delete_category(id):
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-     DELETE FROM category
+     DELETE FROM Categories
       WHERE id = ?
       """, (id, ))
 
@@ -61,7 +61,7 @@ def create_category(new_category):
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        INSERT INTO Category
+        INSERT INTO Categories
             ( label )
         VALUES
             ( ?, ?, ?, ?, ?);

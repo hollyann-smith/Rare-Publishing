@@ -85,8 +85,22 @@ CREATE TABLE "Categories" (
   "label" varchar
 );
 
-SELECT * FROM ;
 
 INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
+
+
+-- Select all Categories
+SELECT
+  c.id,
+  c.label
+FROM Categories c
+WHERE c.id = 1
+
+-- Select Category ID 1
+SELECT
+  c.id,
+  c.label
+FROM Categories c
+WHERE c.id = 1
