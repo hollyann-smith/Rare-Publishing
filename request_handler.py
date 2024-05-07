@@ -55,7 +55,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         response = {}
 
-        parsed = self.parse_url(self.path)
+        parsed = self.parse_url()
 
         if '?' not in self.path:
             ( resource, id ) = parsed
