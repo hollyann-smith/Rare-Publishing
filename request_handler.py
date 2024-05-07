@@ -2,7 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
 from views.user import create_user, login_user
-from views.post_requests import get_all_posts, create_post, delete_post, update_post
+from views.post_requests import get_all_posts, create_post, delete_post, update_post, get_single_post
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -51,8 +51,23 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        
-        pass
+        self._set_headers(200)
+
+        response = {}
+
+        parsed = self.parse_url(self.path)
+
+        if '?' not in self.path:
+            ( resource, id ) = parsed
+
+            # It's an if..else statement
+            if resource == "posts":
+                if id is not None:
+                    response = get_single_post(id)
+                else:
+                    response = get_all_posts()
+
+        self.wfile.write(json.dumps(response).encode())
 
 
     def do_POST(self):
@@ -62,8 +77,12 @@ class HandleRequests(BaseHTTPRequestHandler):
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
         resource, _ = self.parse_url()
+    
+        new_post = None
         
-        If
+        if resource == "posts":
+            new_post = create_post(post_body)
+            self.wfile.write(json.dumps(new_post).encode())
 
         if resource == 'login':
             response = login_user(post_body)
@@ -73,21 +92,32 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.wfile.write(response.encode())
 
     def do_PUT(self):
-        """Handles PUT requests to the server"""
-        pass
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+
+        (resource, id) = self.parse_url(self.path)
+        
+        success = False
+
+        if resource == "posts":
+            success = update_post(id, post_body)
+            
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+
+        self.wfile.write("".encode())
 
     def do_DELETE(self):
-        # Set a 204 response code
         self._set_headers(204)
 
-        # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-        # Delete a single animal from the list
         if resource == "posts":
             delete_post(id)
 
-        # Encode the new animal and send in response
         self.wfile.write("".encode())
 
 
