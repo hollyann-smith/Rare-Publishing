@@ -1,6 +1,7 @@
 import sqlite3
 import json
 from models import Post
+
 POSTS = [
   {
     "id": 1,

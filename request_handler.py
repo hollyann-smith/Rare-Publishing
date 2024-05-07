@@ -50,7 +50,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        """Handle Get requests to the server"""
+        
         pass
 
 
@@ -66,7 +66,6 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = login_user(post_body)
         if resource == 'register':
             response = create_user(post_body)
-        if resource == 
 
         self.wfile.write(response.encode())
 
