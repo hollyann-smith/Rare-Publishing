@@ -47,6 +47,29 @@ def get_all_posts():
     
     return posts
 
+def get_single_post(id):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        SELECT
+            p.id,
+            p.user_id,
+            p.title,
+            p.publication_date,
+            p.image_url,
+            p.content,
+            p.approved
+    From post p
+        WHERE p.id = ?
+        """, ( id, ))
+
+        data = db_cursor.fetchone()
+
+        post = Post(data['id'], data['user_id'], data['title'], data['publication_date'], data['image_url'], data['content'], data['approved'])
+
+        return post.__dict__
+
 def create_post(post):
     max_id = POSTS[-1]["id"]
     new_id = max_id + 1
@@ -58,6 +81,12 @@ def delete_post(id):
     with sqlite3.connect("./db.sqlite3") as conn:
         db_cursor = conn.cursor()
 
+        db_cursor.execute("""
+        DELETE FROM comment
+        WHERE post_id = ?
+        """, (id, ))
+
+        # Delete the post itself
         db_cursor.execute("""
         DELETE FROM post
         WHERE id = ?
