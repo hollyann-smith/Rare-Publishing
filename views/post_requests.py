@@ -54,14 +54,14 @@ def get_single_post(id):
         return post.__dict__
 
 def create_post(new_post):
-    with sqlite3.connect("./kennel.sqlite3") as conn:
+    with sqlite3.connect("./db.sqlite3") as conn:
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        INSERT INTO Post
+        INSERT INTO Posts
             ( category_id, user_id, title, publication_date, image_url, content, approved )
         VALUES
-            ( ?, ?, ?, ?, ?);
+            ( ?, ?, ?, ?, ?, ?, ?);
         """, (new_post['category_id'], new_post['user_id'], new_post['title'], new_post['publication_date'], new_post['image_url'], new_post['content'], new_post['approved']))
 
         id = db_cursor.lastrowid
@@ -80,7 +80,6 @@ def delete_post(id):
         WHERE post_id = ?
         """, (id, ))
 
-        # Delete the post itself
         db_cursor.execute("""
         DELETE FROM post
         WHERE id = ?
