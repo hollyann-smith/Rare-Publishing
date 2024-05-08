@@ -18,7 +18,7 @@ def get_all_posts():
         p.image_url,
         p.content,
         p.approved
-    From post p
+    From posts p
     """)
     posts = []
     dataset = db_cursor.fetchall()
@@ -75,13 +75,18 @@ def delete_post(id):
     with sqlite3.connect("./db.sqlite3") as conn:
         db_cursor = conn.cursor()
 
+        # Delete comments associated with the post
         db_cursor.execute("""
-        DELETE FROM comment
-        WHERE post_id = ?
+        DELETE FROM comments
+        WHERE comments.post_id IN (
+            SELECT post_id
+            FROM posts
+            WHERE id = ?
+        )
         """, (id, ))
 
         db_cursor.execute("""
-        DELETE FROM post
+        DELETE FROM posts
         WHERE id = ?
         """, (id, ))
 
@@ -91,17 +96,17 @@ def update_post(id, new_post):
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        UPDATE Post
+        UPDATE Posts
             SET
                 category_id = ?,
                 title = ?,
-                publication_date = ?
-                image_url = ?
-                content = ?
+                publication_date = ?,
+                image_url = ?,
+                content = ?,
                 approved = ?
         WHERE id = ?
         """, (new_post['category_id'],
-              new_post['title'], new_post['image_url'], new_post['publication_date'], new_post['content'], new_post['approved'], id, ))
+              new_post['title'], new_post['publication_date'], new_post['image_url'], new_post['content'], new_post['approved'], id, ))
 
         rows_affected = db_cursor.rowcount
 
