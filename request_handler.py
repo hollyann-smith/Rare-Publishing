@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
-from views.user import create_user, login_user
+from views.user_requests import create_user, get_all_users, get_single_user, login_user, update_user
 from views.post_requests import get_all_posts, create_post, delete_post, update_post, get_single_post
 from views.category_requests import get_categories, create_category, delete_category, get_single_category
 from urllib.parse import urlparse
@@ -63,6 +63,13 @@ class HandleRequests(BaseHTTPRequestHandler):
             ( resource, id ) = parsed
 
             # It's an if..else statement
+            if resource == 'users':
+                if id is not None:
+                    response = get_single_user(id)
+                    self._set_headers(200)
+                else:
+                    response = get_all_users()
+                    self._set_headers(200)  
             if resource == "posts":
                 if id is not None:
                     response = get_single_post(id)
@@ -113,6 +120,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "posts":
             success = update_post(id, post_body)
+        if resource == "users":
+            success = update_user(id,post_body)
             
         if success:
             self._set_headers(204)
