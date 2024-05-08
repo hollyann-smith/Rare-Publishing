@@ -83,10 +83,6 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_category(id)
                 else: 
                     response = get_categories()
-        else:
-            (resource, query) = parsed
-                        
-            self.wfile.write(json.dumps(response).encode())
             
         else: # There is a ? in the path, run the query param functions
             (resource, query, value) = self.parse_url(self.path)
@@ -117,7 +113,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = create_user(post_body)
         elif resource == 'categories':
             new_item = create_category(post_body)
-                        self.wfile.write(response.encode())
+            self.wfile.write(response.encode())
         elif resource == "comments":
             new_comment = create_comment(post_body)
             self.wfile.write(json.dumps(new_comment).encode())
@@ -136,7 +132,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             success = update_post(id, post_body)
         elif resource == "comments":
             success = update_comment(id, post_body)
-        if resource == "users":
+        elif resource == "users":
             success = update_user(id,post_body)
             
         if success:
