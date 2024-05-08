@@ -2,7 +2,7 @@ import sqlite3
 from models import Comment
 
 def get_comments_by_post(post_id):
-  with sqlite3.connect("./kennel.sqlite3") as conn:
+  with sqlite3.connect("./db.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
@@ -27,16 +27,16 @@ def get_comments_by_post(post_id):
   return comments
   
 def create_comment(new_comment):
-  with sqlite3.connect("./kennel.sqlite3") as conn:
+  with sqlite3.connect("./db.sqlite3") as conn:
     db_cursor = conn.cursor()
 
     db_cursor.execute("""
     INSERT INTO Comments
         ( post_id, content, author_id )
     VALUES
-        ( ?, ?, ?, ?, ?);
+        ( ?, ?, ?);
     """, (new_comment['post_id'], new_comment['content'],
-          new_comment['author_id'], ))
+          new_comment['author_id']))
 
     id = db_cursor.lastrowid
 
@@ -45,7 +45,7 @@ def create_comment(new_comment):
   return new_comment
 
 def update_comment(id, new_comment):
-  with sqlite3.connect("./kennel.sqlite3") as conn:
+  with sqlite3.connect("./db.sqlite3") as conn:
     db_cursor = conn.cursor()
 
     db_cursor.execute("""
@@ -66,7 +66,7 @@ def update_comment(id, new_comment):
       return True
 
 def delete_comment(id):
-    with sqlite3.connect("./kennel.sqlite3") as conn:
+    with sqlite3.connect("./db.sqlite3") as conn:
         db_cursor = conn.cursor()
 
         db_cursor.execute("""

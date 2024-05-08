@@ -1,14 +1,15 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from urllib.parse import urlparse, parse_qs
 from views import *
+from urllib.parse import urlparse, parse_qs
 
 
 class HandleRequests(BaseHTTPRequestHandler):
     """Handles the requests to this server"""
 
-    def parse_url(self):
+    def parse_url(self, path):
         """Parse the url into the resource and id"""
+        parsed_url = urlparse(path)
         path_params = self.path.split('/')
         resource = path_params[1]
         if '?' in resource:
@@ -66,29 +67,13 @@ class HandleRequests(BaseHTTPRequestHandler):
                 else:
                     response = get_all_posts()
 
-        self.wfile.write(json.dumps(response).encode())
-        self._set_headers(200)
-
-        response = {}
-
-        parsed = self.parse_url(self.path)
-        
-        if '?' not in self.path:
-            ( resource, id ) = parsed
-
-            if resource == "comments":
-                if id is not None:
-                    response = get_comments_by_post(id) # only need ? stuff this is just a place holder
-            
             self.wfile.write(json.dumps(response).encode())
-
             
         else: # There is a ? in the path, run the query param functions
-            (resource, query) = parsed
+            (resource, query, value) = self.parse_url(self.path)
 
-            # see if the query dictionary has an email key
-            if query.get('post_id') and resource == 'comments':
-                response = get_comments_by_post(query['post_id'][0])
+            if resource == 'comments' and query=='post_id':
+                response = get_comments_by_post(value)
                 self.wfile.write(json.dumps(response).encode())
 
 
@@ -98,21 +83,20 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
-        resource, _ = self.parse_url()
+        resource, _ = self.parse_url(self.path)
     
         new_post = None
         
         if resource == "posts":
             new_post = create_post(post_body)
             self.wfile.write(json.dumps(new_post).encode())
-
-        if resource == 'login':
+        elif resource == 'login':
             response = login_user(post_body)
             self.wfile.write(response.encode())
-        if resource == 'register':
+        elif resource == 'register':
             response = create_user(post_body)
             self.wfile.write(response.encode())
-        if resource == "comments":
+        elif resource == "comments":
             new_comment = create_comment(post_body)
             self.wfile.write(json.dumps(new_comment).encode())
 
@@ -128,6 +112,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "posts":
             success = update_post(id, post_body)
+        elif resource == "comments":
+            success = update_comment(id, post_body)
             
         if success:
             self._set_headers(204)
@@ -136,22 +122,6 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         self.wfile.write("".encode())
         self._set_headers(204)
-        content_len = int(self.headers.get('content-length', 0))
-        post_body = self.rfile.read(content_len)
-        post_body = json.loads(post_body)
-
-        (resource, id) = self.parse_url(self.path)
-        
-        success = False
-
-        if resource == "comments":
-                # will return either True or False from `update_animal`
-            success = update_comment(id, post_body)
-            
-        if success:
-            self._set_headers(204)
-        else:
-            self._set_headers(404)
             
 
     def do_DELETE(self):
@@ -161,16 +131,11 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "posts":
             delete_post(id)
+        elif resource == "comments":
+            delete_comment(id)
 
         self.wfile.write("".encode())
 
-        self._set_headers(204)
-
-        (resource, id) = self.parse_url(self.path)
-        if resource == "comments":
-            delete_comment(id)
-        
-        self.wfile.write("successfully deleted".encode())
 
 def main():
     """Starts the server on port 8088 using the HandleRequests class
