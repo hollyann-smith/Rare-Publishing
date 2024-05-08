@@ -53,12 +53,23 @@ def get_single_post(id):
 
         return post.__dict__
 
-def create_post(post):
-    max_id = POSTS[-1]["id"]
-    new_id = max_id + 1
-    post["id"] = new_id
-    POSTS.append(post)
-    return post
+def create_post(new_post):
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO Post
+            ( category_id, user_id, title, publication_date, image_url, content, approved )
+        VALUES
+            ( ?, ?, ?, ?, ?);
+        """, (new_post['category_id'], new_post['user_id'], new_post['title'], new_post['publication_date'], new_post['image_url'], new_post['content'], new_post['approved']))
+
+        id = db_cursor.lastrowid
+
+        new_post['id'] = id
+
+
+    return new_post
 
 def delete_post(id):
     with sqlite3.connect("./db.sqlite3") as conn:

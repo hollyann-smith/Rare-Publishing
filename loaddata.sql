@@ -99,6 +99,27 @@ INSERT INTO `Users` VALUES (null, "Jessica", "Doe", "jd42@gmail.com", "I am a tr
 INSERT INTO `Users` VALUES (null, "Jack", "Doe", "jd41@gmail.com", "I am a tractor grandpa", "jackdoe", "portaJack", "https://randomuser.me/api/portraits/men/3.jpg", "2020-01-01", 1);
 INSERT INTO `Users` VALUES (null, "Johnny", "Doe", "jd40@gmail.com", "I am a tractor grandson", "johnnydoo", "portaJohnny", "https://randomuser.me/api/portraits/men/4.jpg", "2020-01-01", 1);
 
+INSERT INTO `Posts` VALUES (null, 1, 1, "Tractor News", "2020-01-01", "https://picsum.photos/200/300", "This is a tractor news", 1);
+INSERT INTO `Posts` VALUES (null, 2, 1, "Tractor Blues", "2020-06-01", "https://picsum.photos/200/301", "This is a tractortastrophe", 1);
+INSERT INTO `Posts` VALUES (null, 3, 1, "Tractor Facts", "2020-03-01", "https://picsum.photos/200/302", "This is a tractor fact", 1);
+INSERT INTO `Posts` VALUES (null, 4, 1, "Tractor Facts", "2020-03-01", "https://picsum.photos/200/303", "This is a tractor fact", 1);
+INSERT INTO `Posts` VALUES (null, 5, 1, "Tractor Facts", "2020-03-01", "https://picsum.photos/200/304", "This is a tractor fact", 1);
+INSERT INTO `Posts` VALUES (null, 6, 1, "Tractor Facts", "2020-03-01", "https://picsum.photos/200/305", "This is a tractor fact", 1);
+
+INSERT INTO `Comments` VALUES (null, 1, 1, "This is a comment");
+INSERT INTO `Comments` VALUES (null, 1, 2, "This is a comment");
+INSERT INTO `Comments` VALUES (null, 1, 3, "This is a comment");
+INSERT INTO `Comments` VALUES (null, 1, 4, "This is a comment");
+INSERT INTO `Comments` VALUES (null, 1, 5, "This is a comment");
+INSERT INTO `Comments` VALUES (null, 1, 6, "This is a comment");
+
+INSERT INTO `Categories` VALUES (null, "News");
+INSERT INTO `Categories` VALUES (null, "Facts");
+INSERT INTO `Categories` VALUES (null, "Blues");
+INSERT INTO `Categories` VALUES (null, "Tastrophe");
+INSERT INTO `Categories` VALUES (null, "Fiction");
+INSERT INTO `Categories` VALUES (null, "History");
+
 
 SELECT
   c.id,
