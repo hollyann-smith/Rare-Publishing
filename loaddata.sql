@@ -8,7 +8,7 @@ CREATE TABLE "Users" (
   "password" varchar,
   "profile_image_url" varchar,
   "created_on" date,
-  "active" bit
+  "active" bit,
 );
 
 CREATE TABLE "DemotionQueue" (

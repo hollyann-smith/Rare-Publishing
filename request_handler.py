@@ -5,6 +5,9 @@ from views.user_requests import create_user, get_all_users, get_single_user, log
 from views.post_requests import get_all_posts, create_post, delete_post, update_post, get_single_post
 from views.category_requests import get_categories, create_category, delete_category, get_single_category
 from urllib.parse import urlparse
+from views import *
+from urllib.parse import urlparse, parse_qs
+
 
 class HandleRequests(BaseHTTPRequestHandler):
     """Handles the requests to this server"""
@@ -80,10 +83,13 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_category(id)
                 else: 
                     response = get_categories()
-        else:
-            (resource, query) = parsed
-                        
-        self.wfile.write(json.dumps(response).encode())
+            
+        else: # There is a ? in the path, run the query param functions
+            (resource, query, value) = self.parse_url(self.path)
+
+            if resource == 'comments' and query=='post_id':
+                response = get_comments_by_post(value)
+                self.wfile.write(json.dumps(response).encode())
 
 
     def do_POST(self):
@@ -93,21 +99,25 @@ class HandleRequests(BaseHTTPRequestHandler):
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
         resource, _ = self.parse_url(self.path)
+        resource, _ = self.parse_url(self.path)
     
         new_item = None
         
         if resource == "posts":
             new_item = create_post(post_body)
             self.wfile.write(json.dumps(new_item).encode())
-
-        if resource == 'login':
+        elif resource == 'login':
             response = login_user(post_body)
-        if resource == 'register':
+            self.wfile.write(response.encode())
+        elif resource == 'register':
             response = create_user(post_body)
         elif resource == 'categories':
             new_item = create_category(post_body)
-            
-        self.wfile.write(response.encode())
+            self.wfile.write(response.encode())
+        elif resource == "comments":
+            new_comment = create_comment(post_body)
+            self.wfile.write(json.dumps(new_comment).encode())
+
 
     def do_PUT(self):
         content_len = int(self.headers.get('content-length', 0))
@@ -120,7 +130,9 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "posts":
             success = update_post(id, post_body)
-        if resource == "users":
+        elif resource == "comments":
+            success = update_comment(id, post_body)
+        elif resource == "users":
             success = update_user(id,post_body)
             
         if success:
@@ -129,6 +141,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             self._set_headers(404)
 
         self.wfile.write("".encode())
+        self._set_headers(204)
+            
 
     def do_DELETE(self):
         self._set_headers(204)
@@ -137,6 +151,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "posts":
             delete_post(id)
+        elif resource == "comments":
+            delete_comment(id)
         elif resource == 'categories':
             delete_category(id)
             
