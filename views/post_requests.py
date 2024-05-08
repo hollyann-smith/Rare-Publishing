@@ -78,17 +78,19 @@ def delete_post(id):
         # Delete comments associated with the post
         db_cursor.execute("""
         DELETE FROM comments
-        WHERE comments.post_id IN (
+        WHERE post_id IN (
             SELECT post_id
-            FROM posts
-            WHERE id = ?
+            FROM comments
+            WHERE post_id = ?
         )
         """, (id, ))
 
+        # Delete the post itself
         db_cursor.execute("""
         DELETE FROM posts
         WHERE id = ?
         """, (id, ))
+
 
         
 def update_post(id, new_post):
