@@ -111,7 +111,6 @@ INSERT INTO `Comments` VALUES (null, 4, 2, "This is a comment");
 INSERT INTO `Comments` VALUES (null, 6, 3, "This is a comment");
 INSERT INTO `Comments` VALUES (null, 3, 4, "This is a comment");
 INSERT INTO `Comments` VALUES (null, 5, 5, "This is a comment");
-INSERT INTO `Comments` VALUES (null, 10, 6, "This is a comment");
 
 INSERT INTO `Categories` VALUES (null, "News");
 INSERT INTO `Categories` VALUES (null, "Facts");
