@@ -1,5 +1,10 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
+
+from views.user_requests import create_user, get_all_users, get_single_user, login_user, update_user
+from views.post_requests import get_all_posts, create_post, delete_post, update_post, get_single_post
+from views.category_requests import get_categories, create_category, delete_category, get_single_category
+from urllib.parse import urlparse
 from views import *
 from urllib.parse import urlparse, parse_qs
 
@@ -61,12 +66,26 @@ class HandleRequests(BaseHTTPRequestHandler):
             ( resource, id ) = parsed
 
             # It's an if..else statement
+            if resource == 'users':
+                if id is not None:
+                    response = get_single_user(id)
+                    self._set_headers(200)
+                else:
+                    response = get_all_users()
+                    self._set_headers(200)  
             if resource == "posts":
                 if id is not None:
                     response = get_single_post(id)
                 else:
                     response = get_all_posts()
-
+            elif resource == "categories":
+                if id is not None:
+                    response = get_single_category(id)
+                else: 
+                    response = get_categories()
+        else:
+            (resource, query) = parsed
+                        
             self.wfile.write(json.dumps(response).encode())
             
         else: # There is a ? in the path, run the query param functions
@@ -84,18 +103,21 @@ class HandleRequests(BaseHTTPRequestHandler):
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
         resource, _ = self.parse_url(self.path)
+        resource, _ = self.parse_url(self.path)
     
-        new_post = None
+        new_item = None
         
         if resource == "posts":
-            new_post = create_post(post_body)
-            self.wfile.write(json.dumps(new_post).encode())
+            new_item = create_post(post_body)
+            self.wfile.write(json.dumps(new_item).encode())
         elif resource == 'login':
             response = login_user(post_body)
             self.wfile.write(response.encode())
         elif resource == 'register':
             response = create_user(post_body)
-            self.wfile.write(response.encode())
+        elif resource == 'categories':
+            new_item = create_category(post_body)
+                        self.wfile.write(response.encode())
         elif resource == "comments":
             new_comment = create_comment(post_body)
             self.wfile.write(json.dumps(new_comment).encode())
@@ -114,6 +136,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             success = update_post(id, post_body)
         elif resource == "comments":
             success = update_comment(id, post_body)
+        if resource == "users":
+            success = update_user(id,post_body)
             
         if success:
             self._set_headers(204)
@@ -133,7 +157,9 @@ class HandleRequests(BaseHTTPRequestHandler):
             delete_post(id)
         elif resource == "comments":
             delete_comment(id)
-
+        elif resource == 'categories':
+            delete_category(id)
+            
         self.wfile.write("".encode())
 
 
