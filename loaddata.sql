@@ -91,7 +91,15 @@ INSERT INTO Tags ('label') VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
 
 
--- Select all Categories
+
+INSERT INTO `Users` VALUES (null, "John", "Doe", "jd45@gmail.com", "I am a tractor guy", "johndoe", "portaJohn", "https://randomuser.me/api/portraits/men/1.jpg", "2020-01-01", 1);
+INSERT INTO `Users` VALUES (null, "Jane", "Doe", "jd44@gmail.com", "I am a tractor chick", "janedoe", "portaJane", "https://randomuser.me/api/portraits/women/1.jpg", "2020-01-01", 1);
+INSERT INTO `Users` VALUES (null, "Jerry", "Doe", "jd43@gmail.com", "I am a tractor ccousin", "jerrydoo", "portaJerry", "https://randomuser.me/api/portraits/men/2.jpg", "2020-01-01", 1);
+INSERT INTO `Users` VALUES (null, "Jessica", "Doe", "jd42@gmail.com", "I am a tractor grandma", "jessicadoe", "portaJessica", "https://randomuser.me/api/portraits/women/2.jpg", "2020-01-01", 1);
+INSERT INTO `Users` VALUES (null, "Jack", "Doe", "jd41@gmail.com", "I am a tractor grandpa", "jackdoe", "portaJack", "https://randomuser.me/api/portraits/men/3.jpg", "2020-01-01", 1);
+INSERT INTO `Users` VALUES (null, "Johnny", "Doe", "jd40@gmail.com", "I am a tractor grandson", "johnnydoo", "portaJohnny", "https://randomuser.me/api/portraits/men/4.jpg", "2020-01-01", 1);
+
+
 SELECT
   c.id,
   c.label
