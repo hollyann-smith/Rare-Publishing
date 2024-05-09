@@ -78,11 +78,16 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_post(id)
                 else:
                     response = get_all_posts()
-            elif resource == "categories":
+            if resource == "categories":
                 if id is not None:
                     response = get_single_category(id)
                 else: 
                     response = get_categories()
+                    
+            else:
+                (resource, query) = parsed
+
+            self.wfile.write(json.dumps(response).encode())
             
         else: # There is a ? in the path, run the query param functions
             (resource, query, value) = self.parse_url(self.path)
