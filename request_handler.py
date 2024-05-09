@@ -83,7 +83,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_category(id)
                 else: 
                     response = get_categories()
-                    
+            if resource == "comments":
+                response = get_comments_by_post(id)                 
             else:
                 (resource, query) = parsed
 
@@ -91,10 +92,6 @@ class HandleRequests(BaseHTTPRequestHandler):
             
         else: # There is a ? in the path, run the query param functions
             (resource, query, value) = self.parse_url(self.path)
-
-            if resource == 'comments' and query=='post_id':
-                response = get_comments_by_post(value)
-                self.wfile.write(json.dumps(response).encode())
 
 
     def do_POST(self):
@@ -120,8 +117,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_item = create_category(post_body)
             self.wfile.write(response.encode())
         elif resource == "comments":
-            new_comment = create_comment(post_body)
-            self.wfile.write(json.dumps(new_comment).encode())
+            new_item = create_comment(post_body)
+            self.wfile.write(response.encode())
 
 
     def do_PUT(self):
