@@ -106,11 +106,12 @@ INSERT INTO `Posts` VALUES (null, 4, 1, "Tractor Facts", "2020-03-01", "https://
 INSERT INTO `Posts` VALUES (null, 5, 1, "Tractor Facts", "2020-03-01", "https://picsum.photos/200/304", "This is a tractor fact", 1);
 INSERT INTO `Posts` VALUES (null, 6, 1, "Tractor Facts", "2020-03-01", "https://picsum.photos/200/305", "This is a tractor fact", 1);
 
-INSERT INTO `Comments` VALUES (null, 2, 1, "This is a comment");
-INSERT INTO `Comments` VALUES (null, 4, 2, "This is a comment");
-INSERT INTO `Comments` VALUES (null, 6, 3, "This is a comment");
-INSERT INTO `Comments` VALUES (null, 3, 4, "This is a comment");
-INSERT INTO `Comments` VALUES (null, 5, 5, "This is a comment");
+INSERT INTO `Comments` VALUES (null, 2, 1, "This is a comment 1");
+INSERT INTO `Comments` VALUES (null, 4, 2, "This is a comment 2");
+INSERT INTO `Comments` VALUES (null, 6, 3, "This is a comment 3");
+INSERT INTO `Comments` VALUES (null, 3, 4, "This is a comment 4");
+INSERT INTO `Comments` VALUES (null, 5, 5, "This is a comment 5");
+INSERT INTO `Comments` VALUES (null, 1, 6, "This is a comment 6");
 
 INSERT INTO `Categories` VALUES (null, "News");
 INSERT INTO `Categories` VALUES (null, "Facts");
