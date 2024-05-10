@@ -101,7 +101,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         post_body = json.loads(self.rfile.read(content_len))
         response = ''
         resource, _ = self.parse_url(self.path)
-        resource, _ = self.parse_url(self.path)
     
         new_item = None
         
